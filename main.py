@@ -1,3 +1,4 @@
+import utils.session
 from utils import (read_video, 
                    save_video,
                    measure_distance,
