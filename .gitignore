@@ -23,5 +23,6 @@ input_videos/australia_open.mp4
 # OS / IDE generated
 .DS_Store
 Thumbs.db
-.vscode/
 .idea/
+config.bat
+node_modules
