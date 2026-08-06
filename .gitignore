@@ -1,0 +1,27 @@
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Large Model Weights (>100MB - GitHub single file limit)
+yolov8x.pt
+models/*.pt
+models/*.pth
+*.pt
+*.pth
+
+# Large Input Raw Videos (>100MB)
+input_videos/australia_open.mp4
+
+# OS / IDE generated
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

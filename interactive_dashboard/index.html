@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TENNIS CV — Interactive Analysis Viewer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="brand">
+        <span class="brand-badge">TENNIS CV</span>
+        <span class="brand-title">Interactive Analysis Viewer</span>
+      </div>
+      <div class="pipeline-badge">
+        <span class="status-dot green"></span>
+        <span id="pipeline-info">pipeline 69.4ms/frame (14.4fps) • 288 frames</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-secondary" id="btn-3d"><span class="icon">🧊</span> 3D View</button>
+      <button class="btn btn-secondary" id="btn-live"><span class="icon">⚡</span> Live Detect</button>
+      <button class="btn btn-secondary" id="btn-calibration"><span class="icon">📐</span> Court Calibration</button>
+      <button class="btn btn-primary" id="btn-upload"><span class="icon">📤</span> Upload Clip</button>
+      <button class="btn btn-accent" id="btn-rerun"><span class="icon">🔄</span> Rerun Pipeline</button>
+    </div>
+  </header>
+
+  <!-- Main Grid Layout -->
+  <div class="app-layout">
+    
+    <!-- Left Section: Video Player & Timeline -->
+    <main class="player-section">
+      
+      <!-- Video Container with Canvas Overlay -->
+      <div class="video-container" id="video-box">
+        <video id="video-player" playsinline muted autoplay loop preload="auto">
+          <source src="input_videos/australia_open_clip.mp4" type="video/mp4">
+          Your browser does not support HTML5 video.
+        </video>
+        <canvas id="overlay-canvas"></canvas>
+
+        <!-- Dynamic On-Video Banner -->
+        <div class="video-top-banner">
+          <div class="tournament-title">AUSTRALIAN OPEN 2024 — MEN'S FINAL</div>
+          <div class="score-pill">
+            <span class="p-name">ALCARAZ</span> <span class="p-score">1 | 40</span>
+            <span class="divider">vs</span>
+            <span class="p-name">DJOKOVIC</span> <span class="p-score">2 | AD</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Playback Controls Bar -->
+      <div class="control-bar">
+        <div class="ctrl-group">
+          <button class="ctrl-btn" id="ctrl-rewind" title="Rewind">⏮ rewind</button>
+          <button class="ctrl-btn primary" id="ctrl-play" title="Play/Pause">⏸ pause</button>
+          <button class="ctrl-btn" id="ctrl-prev" title="Previous Frame">(-1)</button>
+          <button class="ctrl-btn" id="ctrl-next" title="Next Frame">(+1)</button>
+        </div>
+
+        <div class="speed-selector">
+          <span class="speed-label">speed</span>
+          <button class="speed-btn" data-speed="0.1">0.1x</button>
+          <button class="speed-btn active" data-speed="0.25">0.25x</button>
+          <button class="speed-btn" data-speed="0.5">0.5x</button>
+          <button class="speed-btn" data-speed="1.0">1x</button>
+          <button class="speed-btn" data-speed="2.0">2x</button>
+        </div>
+
+        <div class="timestamp-display" id="time-display">0.00s / 12.00s • f0</div>
+      </div>
+
+      <!-- Overlays & Toggles Bar -->
+      <div class="toggles-bar">
+        <div class="toggle-group">
+          <span class="toggle-group-label">video overlays:</span>
+          <label class="toggle-item"><input type="checkbox" id="chk-boxes" checked> <span class="chk-custom"></span> boxes</label>
+          <label class="toggle-item"><input type="checkbox" id="chk-skeleton" checked> <span class="chk-custom"></span> skeleton</label>
+          <label class="toggle-item"><input type="checkbox" id="chk-ball" checked> <span class="chk-custom"></span> ball</label>
+          <label class="toggle-item"><input type="checkbox" id="chk-lines" checked> <span class="chk-custom"></span> court lines</label>
+          <label class="toggle-item"><input type="checkbox" id="chk-names" checked> <span class="chk-custom"></span> names</label>
+          <label class="toggle-item"><input type="checkbox" id="chk-distance" checked> <span class="chk-custom"></span> partner distance</label>
+          <label class="toggle-item"><input type="checkbox" id="chk-heatmap"> <span class="chk-custom"></span> court heatmap</label>
+        </div>
+      </div>
+
+      <!-- Filter Controls Bar -->
+      <div class="filter-bar">
+        <span class="filter-label">color by:</span>
+        <button class="filter-chip active">shot type</button>
+        <button class="filter-chip">outcome</button>
+        <span class="filter-divider"></span>
+        <span class="filter-label">filter:</span>
+        <label class="chip-check"><input type="checkbox" checked> <span class="dot serve"></span> serve</label>
+        <label class="chip-check"><input type="checkbox" checked> <span class="dot smash"></span> smash</label>
+        <label class="chip-check"><input type="checkbox" checked> <span class="dot bandeja"></span> bandeja</label>
+        <label class="chip-check"><input type="checkbox" checked> <span class="dot volley"></span> volley</label>
+        <label class="chip-check"><input type="checkbox" checked> <span class="dot drive"></span> drive</label>
+        <label class="chip-check"><input type="checkbox" checked> <span class="dot ground"></span> groundstroke</label>
+        <label class="chip-check"><input type="checkbox" checked> <span class="dot bounce"></span> bounce</label>
+        <label class="chip-check"><input type="checkbox" checked> <span class="dot rally"></span> rally</label>
+      </div>
+
+      <!-- Interactive Multi-Track Timeline -->
+      <div class="timeline-container">
+        <div class="timeline-scrubber" id="timeline-scrubber">
+          <div class="timeline-head" id="timeline-head"></div>
+        </div>
+
+        <div class="timeline-row">
+          <div class="track-label p1-label">DJOKOVIC</div>
+          <div class="track-lane" id="track-p1"></div>
+        </div>
+        <div class="timeline-row">
+          <div class="track-label p2-label">ALCARAZ</div>
+          <div class="track-lane" id="track-p2"></div>
+        </div>
+        <div class="timeline-row">
+          <div class="track-label ball-label">ball / rally</div>
+          <div class="track-lane" id="track-ball"></div>
+        </div>
+        <div class="timeline-row">
+          <div class="track-label pts-label">serve / pts</div>
+          <div class="track-lane" id="track-pts"></div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Right Sidebar: 2D Court & Analytics -->
+    <aside class="sidebar-section">
+      
+      <!-- Top-Down 2D Court Card -->
+      <div class="card court-card">
+        <div class="card-header">
+          <span class="card-title">TOP-DOWN COURT</span>
+          <span class="card-subtitle" id="court-mode">LIVE METRICS</span>
+        </div>
+        
+        <div class="court-canvas-box">
+          <canvas id="mini-court-canvas" width="300" height="420"></canvas>
+        </div>
+
+        <!-- Live Distance Metrics -->
+        <div class="spacing-metrics">
+          <div class="metric-row">
+            <span class="m-label">player spacing</span>
+            <span class="m-val" id="val-spacing">4.37m <span class="m-tag">(ideal 3-5m) → ok</span></span>
+          </div>
+          <div class="metric-row">
+            <span class="m-label">ball depth</span>
+            <span class="m-val" id="val-depth">11.88m <span class="m-tag">baseline</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Player Performance Report Card -->
+      <div class="card report-card">
+        <div class="card-header">
+          <span class="card-title">PLAYER REPORT</span>
+        </div>
+
+        <div class="report-scroll">
+          
+          <!-- Player 2 (Alcaraz) -->
+          <div class="player-report-block">
+            <div class="p-report-header">
+              <span class="p-dot near"></span>
+              <span class="p-report-name">C. ALCARAZ</span>
+              <span class="p-team-tag">near</span>
+            </div>
+            <div class="p-stats-grid">
+              <div class="p-stat-item"><span class="lbl">shots</span> <span class="val" id="p2-shots">5 • drive×3, lob×2</span></div>
+              <div class="p-stat-item"><span class="lbl">avg hit speed</span> <span class="val" id="p2-hitspeed">84.0 km/h</span></div>
+              <div class="p-stat-item"><span class="lbl">distance</span> <span class="val" id="p2-dist">26.2 m</span></div>
+              <div class="p-stat-item"><span class="lbl">avg / max speed</span> <span class="val" id="p2-speed">2.36 / 5.27 m/s</span></div>
+              <div class="p-stat-item"><span class="lbl">work rate</span> <span class="val" id="p2-workrate">65%</span></div>
+              <div class="p-stat-item"><span class="lbl">time at net</span> <span class="val" id="p2-nettime">20.9%</span></div>
+              <div class="p-stat-item"><span class="lbl">sprints / coverage</span> <span class="val" id="p2-coverage">13 • 16.3 m²</span></div>
+            </div>
+          </div>
+
+          <!-- Player 1 (Djokovic) -->
+          <div class="player-report-block">
+            <div class="p-report-header">
+              <span class="p-dot far"></span>
+              <span class="p-report-name">N. DJOKOVIC</span>
+              <span class="p-team-tag">far</span>
+            </div>
+            <div class="p-stats-grid">
+              <div class="p-stat-item"><span class="lbl">shots</span> <span class="val" id="p1-shots">4 • serve×1, volley×2</span></div>
+              <div class="p-stat-item"><span class="lbl">avg hit speed</span> <span class="val" id="p1-hitspeed">67.5 km/h</span></div>
+              <div class="p-stat-item"><span class="lbl">distance</span> <span class="val" id="p1-dist">27.6 m</span></div>
+              <div class="p-stat-item"><span class="lbl">avg / max speed</span> <span class="val" id="p1-speed">1.71 / 5.27 m/s</span></div>
+              <div class="p-stat-item"><span class="lbl">work rate</span> <span class="val" id="p1-workrate">59%</span></div>
+              <div class="p-stat-item"><span class="lbl">time at net</span> <span class="val" id="p1-nettime">6.3%</span></div>
+              <div class="p-stat-item"><span class="lbl">sprints / coverage</span> <span class="val" id="p1-coverage">6 • 11.3 m²</span></div>
+            </div>
+          </div>
+
+        </div>
+        
+        <div class="card-footer">
+          <span>Hover an event on the timeline for details.</span>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <!-- Hidden File Input for Video Upload -->
+  <input type="file" id="file-uploader" accept="video/*" style="display: none;">
+
+  <script src="app.js"></script>
+</body>
+</html>
