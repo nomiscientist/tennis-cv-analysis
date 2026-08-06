@@ -14,11 +14,18 @@ I’m excited to showcase my latest Computer Vision & Deep Learning project: **T
 
 ### 💡 **What’s Under the Hood?**
 
-🔹 **Player Detection & Net-y Partitioning**: Powered by **YOLOv8x**, dynamically partitioning players across the net line ($y < y_{net}$ vs $y > y_{net}$) to eliminate ID switching and filter out non-players/ball kids.
+🔹 **Player Detection & Spatial Net-Partitioning (YOLOv8x)**:
+   • Dynamically locks Player 1 (top court) and Player 2 (bottom court) across the net line.
+   • Eliminates YOLO ID switching and filters out ball kids, line judges & spectators.
 
-🔹 **Motion-Blur Ball Candidate Recovery**: High-speed tennis balls traveling at 120+ km/h suffer severe motion blur. Using candidate recovery (`conf = 0.08`), court polygon boundary filtering, and a 5-frame centered rolling window average ($\bar{B}_t$), trajectory step-jitter was reduced by **>82%**!
+🔹 **High-Speed Motion-Blur Ball Tracking (Custom YOLOv5)**:
+   • Recovers fast tennis balls (120+ km/h) using low-confidence detection recovery (conf = 0.08).
+   • Applies court boundary polygon filtering to reject wall/logo false positives.
+   • Uses 5-frame centered rolling average trajectory smoothing — reducing step-jitter by **>82%**!
 
-🔹 **14-Landmark Court Keypoints (ResNet-50)**: Fine-tuned regression neural network predicting 14 court landmark intersections to compute 2D Direct Linear Transformation (DLT) Homography Matrix $H \in \mathbb{R}^{3 \times 3}$.
+🔹 **14-Landmark Court Keypoint Regressor (ResNet-50)**:
+   • Fine-tuned deep neural network predicting 14 key court landmark intersections.
+   • Computes 2D Homography Perspective Transformation (DLT) to map broadcast camera view to real-world metric space.
 
 🔹 **Real-World Analytics Engine**: Maps 2D camera pixels to regulation court meters (10.97m × 23.77m) using Homography, tracking live physical metrics:
    • ⚡ **Movement Speeds**: Instantaneous & Max speed (km/h)
