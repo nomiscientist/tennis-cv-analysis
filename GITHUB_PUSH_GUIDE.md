@@ -1,49 +1,68 @@
-# 🚀 Step-by-Step Guide: Pushing Project to GitHub
+# 🚀 Complete Step-by-Step Guide: Pushing Project Updates to GitHub
 
-Follow these simple steps to create a new GitHub repository and push your project:
-
----
-
-### Step 1: Create a New Repository on GitHub
-1. Open your browser and go to: **[github.com/new](https://github.com/new)**
-2. Enter Repository Name: **`tennis-cv-analysis`** (or `tennis_analysis`).
-3. Set Visibility: **Public**.
-4. Leave **"Add a README file"**, **"Add .gitignore"**, and **"Choose a license"** UNCHECKED (since we already created them).
-5. Click **Create repository**.
+This guide covers both **Daily Code Updates** and **Setting Up on a New Machine**.
 
 ---
 
-### Step 2: Set Your New GitHub Remote URL
-Open your terminal (PowerShell / Command Prompt) in `c:\Users\PULKIT\OneDrive\Desktop\tennis\tennis_analysis` and run:
+## ⚡ Daily Workflow (Pushing Future Updates to GitHub)
 
-```bash
-# Change remote URL to your new repository (replace YOUR_USERNAME with your GitHub username)
-git remote set-url origin https://github.com/YOUR_USERNAME/tennis-cv-analysis.git
-```
+Whenever you make changes to your code, dashboard, or documentation, run these 3 simple commands in your terminal:
 
----
-
-### Step 3: Stage All Project Files & Commit
-Run the following commands in your terminal:
-
-```bash
-# Stage all new and modified files
+### Command 1: Stage All Your Changes
+```powershell
 git add .
+```
 
-# Commit changes with a professional message
-git commit -m "Add Tennis CV Pipeline, Interactive Web Dashboard, Placement Viva Guide, and Documentation"
+### Command 2: Commit Your Changes
+```powershell
+git commit -m "Updated interactive dashboard metrics and documentation"
+```
+
+### Command 3: Push to GitHub
+```powershell
+git push origin main
 ```
 
 ---
 
-### Step 4: Push to GitHub
-```bash
-# Push your code to your GitHub repository
-git push -u origin main
+## 🛠️ Complete Setup Workflow (If Setting Up on a New Computer)
+
+If you clone or set up this repository on a new machine, follow these steps:
+
+### Step 1: Open PowerShell in Project Directory
+```powershell
+cd c:\Users\PULKIT\OneDrive\Desktop\tennis\tennis_analysis
+```
+
+### Step 2: Initialize Git & Set Remote URL
+```powershell
+git init
+git branch -M main
+git remote add origin https://github.com/pulkit-patel/tennis-cv-analysis.git
+```
+
+### Step 3: Stage, Commit & Push
+```powershell
+git add .
+git commit -m "Initial commit: Tennis CV Computer Vision pipeline, interactive web dashboard, analytics engine, and placement guides"
+git push -u origin main --force
 ```
 
 ---
 
-### 🛠️ Troubleshooting & Notes:
-- **Large Files (>100MB)**: Our `.gitignore` automatically excludes `yolov8x.pt` and `australia_open.mp4` so `git push` will succeed instantly without hitting single-file size limits.
-- **Model Weights Link**: The `README.md` already includes model download links for `yolov8x.pt` and `keypoints_model.pth`.
+## 📌 Important Notes & Troubleshooting
+
+1. **Large Files Limit (>100MB)**:
+   GitHub rejects individual files larger than 100MB. Our `.gitignore` automatically excludes large binary models (`yolov8x.pt`, `models/*.pt`, `models/*.pth`) and raw long video files (`input_videos/australia_open.mp4`).
+
+2. **Model Download Links**:
+   Anyone cloning your repository can easily download pretrained weights using the download links provided in `README.md` or by running:
+   ```powershell
+   python download_models.py
+   ```
+
+3. **Check What Will Be Pushed**:
+   To see modified or untracked files before committing:
+   ```powershell
+   git status
+   ```
