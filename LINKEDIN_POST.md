@@ -20,7 +20,12 @@ I’m excited to showcase my latest Computer Vision & Deep Learning project: **T
 
 🔹 **14-Landmark Court Keypoints (ResNet-50)**: Fine-tuned regression neural network predicting 14 court landmark intersections to compute 2D Direct Linear Transformation (DLT) Homography Matrix $H \in \mathbb{R}^{3 \times 3}$.
 
-🔹 **Real-World Metric Analytics Engine**: Converts camera pixels into exact Cartesian meters ($10.97\text{m} \times 23.77\text{m}$), tracking **Movement Speeds** ($\text{km/h}$), **Distance Covered** ($m$), **Work Rate %**, **Time at Net %**, and **Court Coverage Area** ($m^2$).
+🔹 **Real-World Analytics Engine**: Maps 2D camera pixels to regulation court meters (10.97m × 23.77m) using Homography, tracking live physical metrics:
+   • ⚡ **Movement Speeds**: Instantaneous & Max speed (km/h)
+   • 🏃 **Distance Covered**: Total meters per rally
+   • 🔥 **Work Rate %**: High-intensity sprint percentage
+   • 🥅 **Time at Net %**: Net-approach vs baseline control
+   • 🗺️ **Court Coverage**: 2D metric heatmap area (m²)
 
 🔹 **Interactive Glassmorphic Web Dashboard**: Built with Vanilla JS & HTML5 Canvas API featuring synced 3D video overlays, 2D top-down mini-court heatmaps, multi-track event timelines, and custom clip uploading.
 
